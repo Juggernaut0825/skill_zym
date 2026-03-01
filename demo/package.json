@@ -1,0 +1,18 @@
+{
+  "name": "zym-demo",
+  "version": "1.0.0",
+  "description": "ZYM Skill Demo Animation",
+  "scripts": {
+    "start": "remotion studio",
+    "render": "remotion render ZymDemo out/demo.mp4",
+    "render-gif": "remotion render ZymDemo out/demo.gif --codec gif"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.431",
+    "@remotion/player": "^4.0.431",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "remotion": "^4.0.431",
+    "typescript": "^5.9.3"
+  }
+}
