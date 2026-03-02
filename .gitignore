@@ -57,5 +57,6 @@ logs/
 
 # Demo (Remotion)
 demo/node_modules/
-demo/out/
+demo/out/*.mp4
+demo/out/*.png
 demo/.remotion/

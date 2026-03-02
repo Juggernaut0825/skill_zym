@@ -65,11 +65,11 @@ Maintains conversation context for natural follow-up questions.
 
 **Food Analysis** - Simply send a photo of your meal:
 
-![Food Analysis Demo](https://maas-log-prod.cn-wlcb.ufileos.com/anthropic/10c49535-61eb-4117-b63b-544b2885c361/89a10f640f0ec79f760f6f59e3a343ae.png?UCloudPublicKey=TOKEN_e15ba47a-d098-4fbd-9afc-a0dcf0e4e621&Expires=1772399855&Signature=jfLSlTcz0eZr/1pEDkNcg4u1do0=)
+![Food Analysis Demo](demo/out/food-analysis.gif)
 
 **Workout Form Check** - Upload your lifting video for AI coaching:
 
-![Form Check Demo](https://maas-log-prod.cn-wlcb.ufileos.com/anthropic/10c49535-61eb-4117-b63b-544b2885c361/7207d309fa2a371965c54f9b56138ff9.png?UCloudPublicKey=TOKEN_e15ba47a-d098-4fbd-9afc-a0dcf0e4e621&Expires=1772399855&Signature=lPLEOFTiMZ3eT9EIT90dslYSRE8=)
+![Form Check Demo](demo/out/form-check.gif)
 
 ---
 
