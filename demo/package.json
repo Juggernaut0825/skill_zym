@@ -6,7 +6,7 @@
     "start": "remotion studio",
     "render": "remotion render ZymDemo out/demo.mp4",
     "render-gif": "remotion render ZymDemo out/demo.gif --codec gif",
-    "render-all": "npm run render && remotion render FoodAnalysis out/food-analysis.mp4 && remotion render FormCheck out/form-check.mp4"
+    "render-all": "remotion render ZymDemo out/demo.gif --codec gif && remotion render FoodAnalysis out/food-analysis.gif --codec gif && remotion render FormCheck out/form-check.gif --codec gif"
   },
   "dependencies": {
     "@remotion/cli": "^4.0.431",

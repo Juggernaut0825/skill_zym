@@ -5,266 +5,113 @@ import {
   useCurrentFrame,
   useVideoConfig,
   spring,
-  Easing,
+  staticFile,
+  Img,
 } from "remotion";
 
-// Colors
 const COLORS = {
-  primary: "#6366f1",
-  secondary: "#8b5cf6",
-  accent: "#f59e0b",
-  background: "#0f172a",
-  surface: "#1e293b",
-  surfaceLight: "#334155",
-  text: "#f8fafc",
-  textMuted: "#94a3b8",
-  success: "#22c55e",
-  userBubble: "#3b82f6",
-  aiBubble: "#1e293b",
+  bg: "#313338",
+  chatBg: "#313338",
+  msgHover: "#2e3035",
+  text: "#dbdee1",
+  textMuted: "#949ba4",
+  textLink: "#00a8fc",
+  accent: "#5865f2",
+  green: "#23a559",
+  divider: "#3f4147",
+  embedBg: "#2b2d31",
+  embedBorder: "#1e1f22",
+  userTag: "#5865f2",
 };
 
-// Chat Message Component
-const ChatMessage: React.FC<{
-  isUser: boolean;
+const Avatar: React.FC<{ letter: string; color: string; size?: number }> = ({
+  letter,
+  color,
+  size = 40,
+}) => (
+  <div
+    style={{
+      width: size,
+      height: size,
+      borderRadius: "50%",
+      backgroundColor: color,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: size * 0.45,
+      fontWeight: 700,
+      color: "#fff",
+      flexShrink: 0,
+    }}
+  >
+    {letter}
+  </div>
+);
+
+const Message: React.FC<{
+  username: string;
+  avatarLetter: string;
+  avatarColor: string;
+  time: string;
+  delay: number;
+  isBot?: boolean;
   children: React.ReactNode;
-  delay: number;
-  avatar?: string;
-}> = ({ isUser, children, delay, avatar }) => {
+}> = ({ username, avatarLetter, avatarColor, time, delay, isBot, children }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-
-  const progress = spring({
-    frame: frame - delay,
-    fps,
-    config: { damping: 20, stiffness: 100 },
-  });
-
-  const opacity = interpolate(progress, [0, 1], [0, 1]);
-  const translateY = interpolate(progress, [0, 1], [20, 0]);
-  const scale = interpolate(progress, [0, 1], [0.9, 1]);
+  const progress = spring({ frame: frame - delay, fps, config: { damping: 20, stiffness: 100 } });
+  const opacity = frame < delay ? 0 : interpolate(progress, [0, 1], [0, 1]);
+  const translateY = interpolate(progress, [0, 1], [12, 0]);
 
   return (
     <div
       style={{
         display: "flex",
-        flexDirection: isUser ? "row-reverse" : "row",
-        gap: 12,
-        marginBottom: 16,
-        opacity: frame < delay ? 0 : opacity,
-        transform: `translateY(${translateY}px) scale(${scale})`,
+        gap: 16,
+        padding: "4px 48px 4px 72px",
+        position: "relative",
+        opacity,
+        transform: `translateY(${translateY}px)`,
       }}
     >
-      {/* Avatar */}
-      <div
-        style={{
-          width: 40,
-          height: 40,
-          borderRadius: "50%",
-          backgroundColor: isUser ? COLORS.userBubble : COLORS.primary,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 20,
-          flexShrink: 0,
-        }}
-      >
-        {isUser ? "👤" : "🏋️"}
+      <div style={{ position: "absolute", left: 16 }}>
+        <Avatar letter={avatarLetter} color={avatarColor} />
       </div>
-
-      {/* Message Bubble */}
-      <div
-        style={{
-          backgroundColor: isUser ? COLORS.userBubble : COLORS.aiBubble,
-          borderRadius: 16,
-          borderBottomRightRadius: isUser ? 4 : 16,
-          borderBottomLeftRadius: isUser ? 16 : 4,
-          padding: "12px 16px",
-          maxWidth: "70%",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
-        }}
-      >
-        {children}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+          <span style={{ fontSize: 16, fontWeight: 600, color: "#f2f3f5" }}>{username}</span>
+          {isBot && (
+            <span
+              style={{
+                fontSize: 10,
+                fontWeight: 600,
+                color: "#fff",
+                backgroundColor: COLORS.userTag,
+                borderRadius: 3,
+                padding: "1px 5px",
+              }}
+            >
+              APP
+            </span>
+          )}
+          <span style={{ fontSize: 12, color: COLORS.textMuted }}>{time}</span>
+        </div>
+        <div style={{ fontSize: 15, color: COLORS.text, lineHeight: 1.5 }}>{children}</div>
       </div>
     </div>
   );
 };
 
-// Food Card Component
-const FoodCard: React.FC<{
-  name: string;
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-  delay: number;
-}> = ({ name, calories, protein, carbs, fat, delay }) => {
+const TypingDots: React.FC<{ delay: number; duration: number }> = ({ delay, duration }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-
-  const progress = spring({
-    frame: frame - delay,
-    fps,
-    config: { damping: 15, stiffness: 80 },
-  });
-
-  const opacity = interpolate(progress, [0, 1], [0, 1]);
-  const scale = interpolate(progress, [0, 1], [0.8, 1]);
-
+  if (frame < delay || frame >= delay + duration) return null;
+  const dot = frame % 30;
   return (
-    <div
-      style={{
-        backgroundColor: COLORS.surfaceLight,
-        borderRadius: 12,
-        padding: 16,
-        opacity: frame < delay ? 0 : opacity,
-        transform: `scale(${scale})`,
-        marginTop: 8,
-      }}
-    >
-      <div
-        style={{
-          fontSize: 16,
-          fontWeight: 600,
-          color: COLORS.text,
-          marginBottom: 12,
-        }}
-      >
-        {name}
+    <div style={{ display: "flex", gap: 16, padding: "4px 48px 4px 72px", position: "relative" }}>
+      <div style={{ position: "absolute", left: 16 }}>
+        <Avatar letter="Z" color="#5865f2" />
       </div>
-      <div
-        style={{
-          display: "flex",
-          gap: 16,
-          flexWrap: "wrap",
-        }}
-      >
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 24, fontWeight: 700, color: COLORS.accent }}>
-            {calories}
-          </div>
-          <div style={{ fontSize: 12, color: COLORS.textMuted }}>kcal</div>
-        </div>
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 24, fontWeight: 700, color: "#ef4444" }}>
-            {protein}g
-          </div>
-          <div style={{ fontSize: 12, color: COLORS.textMuted }}>Protein</div>
-        </div>
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 24, fontWeight: 700, color: "#22c55e" }}>
-            {carbs}g
-          </div>
-          <div style={{ fontSize: 12, color: COLORS.textMuted }}>Carbs</div>
-        </div>
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 24, fontWeight: 700, color: "#3b82f6" }}>
-            {fat}g
-          </div>
-          <div style={{ fontSize: 12, color: COLORS.textMuted }}>Fat</div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Image Preview Component
-const ImagePreview: React.FC<{
-  delay: number;
-}> = ({ delay }) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-
-  const progress = spring({
-    frame: frame - delay,
-    fps,
-    config: { damping: 15, stiffness: 80 },
-  });
-
-  const opacity = interpolate(progress, [0, 1], [0, 1]);
-  const scale = interpolate(progress, [0, 1], [0.8, 1]);
-
-  return (
-    <div
-      style={{
-        backgroundColor: COLORS.surfaceLight,
-        borderRadius: 12,
-        padding: 8,
-        opacity: frame < delay ? 0 : opacity,
-        transform: `scale(${scale})`,
-        maxWidth: 200,
-      }}
-    >
-      <div
-        style={{
-          width: 180,
-          height: 120,
-          borderRadius: 8,
-          background: "linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 48,
-        }}
-      >
-        🥗
-      </div>
-      <div
-        style={{
-          textAlign: "center",
-          marginTop: 8,
-          fontSize: 12,
-          color: COLORS.textMuted,
-        }}
-      >
-        meal.jpg
-      </div>
-    </div>
-  );
-};
-
-// Typing Indicator
-const TypingIndicator: React.FC<{
-  delay: number;
-  duration: number;
-}> = ({ delay, duration }) => {
-  const frame = useCurrentFrame();
-
-  const visible = frame >= delay && frame < delay + duration;
-  const dotOffset = frame % 30;
-
-  return visible ? (
-    <div
-      style={{
-        display: "flex",
-        gap: 12,
-        marginBottom: 16,
-      }}
-    >
-      <div
-        style={{
-          width: 40,
-          height: 40,
-          borderRadius: "50%",
-          backgroundColor: COLORS.primary,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 20,
-        }}
-      >
-        🏋️
-      </div>
-      <div
-        style={{
-          backgroundColor: COLORS.aiBubble,
-          borderRadius: 16,
-          borderBottomLeftRadius: 4,
-          padding: "12px 16px",
-          display: "flex",
-          gap: 4,
-          alignItems: "center",
-        }}
-      >
+      <div style={{ display: "flex", gap: 5, alignItems: "center", padding: "8px 0" }}>
         {[0, 1, 2].map((i) => (
           <div
             key={i}
@@ -273,118 +120,141 @@ const TypingIndicator: React.FC<{
               height: 8,
               borderRadius: "50%",
               backgroundColor: COLORS.textMuted,
-              opacity: dotOffset > i * 10 && dotOffset < (i + 1) * 10 + 5 ? 1 : 0.3,
+              opacity: dot > i * 10 && dot < (i + 1) * 10 + 5 ? 1 : 0.3,
             }}
           />
         ))}
       </div>
     </div>
-  ) : null;
+  );
 };
 
-// Main Component
+const NutritionItem: React.FC<{ label: string; value: string; color: string }> = ({
+  label,
+  value,
+  color,
+}) => (
+  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+    <span style={{ fontSize: 14, color: COLORS.textMuted }}>{label}</span>
+    <span style={{ fontSize: 14, fontWeight: 600, color }}>{value}</span>
+  </div>
+);
+
 export const FoodAnalysis: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-
-  // Header animation
-  const headerProgress = spring({
-    frame,
-    fps,
-    config: { damping: 20, stiffness: 100 },
-  });
 
   return (
     <AbsoluteFill
       style={{
-        background: COLORS.background,
-        fontFamily: "Inter, -apple-system, BlinkMacSystemFont, sans-serif",
+        backgroundColor: COLORS.bg,
+        fontFamily:
+          'Whitney, "Noto Sans SC", "Helvetica Neue", Helvetica, Arial, sans-serif',
         overflow: "hidden",
       }}
     >
-      {/* Header */}
+      {/* Channel header */}
       <div
         style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 80,
-          backgroundColor: COLORS.surface,
+          height: 48,
+          borderBottom: `1px solid ${COLORS.embedBorder}`,
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
-          borderBottom: `1px solid ${COLORS.surfaceLight}`,
-          opacity: headerProgress,
-          transform: `translateY(${interpolate(headerProgress, [0, 1], [-20, 0])}px)`,
+          padding: "0 16px",
+          gap: 8,
         }}
       >
-        <div style={{ fontSize: 28, marginRight: 12 }}>🏋️</div>
-        <div style={{ fontSize: 24, fontWeight: 700, color: COLORS.text }}>
-          ZYM Assistant
-        </div>
+        <span style={{ fontSize: 20, color: COLORS.textMuted }}>#</span>
+        <span style={{ fontSize: 16, fontWeight: 600, color: COLORS.text }}>fitness-coach</span>
       </div>
 
-      {/* Chat Container */}
-      <div
-        style={{
-          position: "absolute",
-          top: 100,
-          left: 40,
-          right: 40,
-          bottom: 40,
-        }}
-      >
-        {/* User sends image */}
-        <ChatMessage isUser={true} delay={20}>
-          <ImagePreview delay={30} />
-        </ChatMessage>
-
-        {/* User message */}
-        <ChatMessage isUser={true} delay={60}>
-          <div style={{ color: COLORS.text, fontSize: 15 }}>
-            What's in this meal?
-          </div>
-        </ChatMessage>
+      {/* Messages */}
+      <div style={{ padding: "16px 0", display: "flex", flexDirection: "column", gap: 16 }}>
+        {/* User sends food photo */}
+        <Message
+          username="Juggernaut"
+          avatarLetter="J"
+          avatarColor="#ed4245"
+          time="Yesterday at 7:58 PM"
+          delay={10}
+        >
+          <div style={{ marginBottom: 4 }}>这是我今晚吃的 分析一下</div>
+          <Img
+            src={staticFile("food-soup.png")}
+            style={{ borderRadius: 8, maxWidth: 300, maxHeight: 220, objectFit: "cover" }}
+          />
+        </Message>
 
         {/* Typing indicator */}
-        <TypingIndicator delay={100} duration={60} />
+        <TypingDots delay={60} duration={50} />
 
-        {/* AI Response */}
-        <ChatMessage isUser={false} delay={160}>
-          <div style={{ color: COLORS.text, fontSize: 15, marginBottom: 8 }}>
-            I've analyzed your meal! Here's the breakdown:
+        {/* Bot response */}
+        <Message
+          username="ZJ"
+          avatarLetter="Z"
+          avatarColor="#5865f2"
+          time="Yesterday at 7:58 PM"
+          delay={110}
+          isBot
+        >
+          <div style={{ marginBottom: 8 }}>
+            看起来这顿饭不仅营养均衡，而且非常清淡健康！
           </div>
-          <FoodCard
-            name="Grilled Chicken Salad"
-            calories={420}
-            protein={35}
-            carbs={18}
-            fat={22}
-            delay={200}
-          />
-        </ChatMessage>
+          <div
+            style={{
+              backgroundColor: COLORS.embedBg,
+              borderLeft: `4px solid ${COLORS.green}`,
+              borderRadius: 4,
+              padding: 16,
+              marginTop: 8,
+            }}
+          >
+            <div style={{ fontSize: 15, fontWeight: 600, color: "#fff", marginBottom: 12 }}>
+              营养成分估算
+            </div>
+            <NutritionItem label="总热量" value="450 - 550 kcal" color="#f59e0b" />
+            <NutritionItem label="蛋白质" value="25-30g" color="#ef4444" />
+            <NutritionItem label="碳水化合物" value="60-70g" color={COLORS.green} />
+            <NutritionItem label="脂肪" value="10-15g" color="#3b82f6" />
+          </div>
+        </Message>
 
-        {/* Second AI message */}
-        <ChatMessage isUser={false} delay={260}>
+        {/* Bot follow-up */}
+        <Message
+          username="ZJ"
+          avatarLetter="Z"
+          avatarColor="#5865f2"
+          time="Yesterday at 7:58 PM"
+          delay={220}
+          isBot
+        >
           <div style={{ color: COLORS.textMuted, fontSize: 14 }}>
-            This is a great high-protein, moderate-carb meal. Perfect for your cutting goal! Would you like me to log this to your daily intake?
+            如果是为了更好的减脂效果，下次可以考虑把白米饭的一半替换成粗粮（如燕麦、糙米）。
+            需要我帮你把这顿饭记录到今天的饮食日志里吗？
           </div>
-        </ChatMessage>
+        </Message>
 
-        {/* User confirmation */}
-        <ChatMessage isUser={true} delay={340}>
-          <div style={{ color: COLORS.text, fontSize: 15 }}>
-            Yes, please log it!
-          </div>
-        </ChatMessage>
+        {/* User reply */}
+        <Message
+          username="Juggernaut"
+          avatarLetter="J"
+          avatarColor="#ed4245"
+          time="Yesterday at 7:59 PM"
+          delay={310}
+        >
+          好的 帮我记录一下
+        </Message>
 
-        {/* Final AI response */}
-        <ChatMessage isUser={false} delay={400}>
-          <div style={{ color: COLORS.success, fontSize: 15 }}>
-            ✅ Meal logged! You've consumed 420 kcal today. Remaining: 1,580 kcal
-          </div>
-        </ChatMessage>
+        {/* Bot confirms */}
+        <Message
+          username="ZJ"
+          avatarLetter="Z"
+          avatarColor="#5865f2"
+          time="Yesterday at 7:59 PM"
+          delay={370}
+          isBot
+        >
+          <span style={{ color: COLORS.green }}>已记录！</span> 今日已摄入 500 kcal，剩余 2327 kcal 额度。
+        </Message>
       </div>
     </AbsoluteFill>
   );
