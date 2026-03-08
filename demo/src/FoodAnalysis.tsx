@@ -177,7 +177,7 @@ export const FoodAnalysis: React.FC = () => {
           time="Yesterday at 7:58 PM"
           delay={10}
         >
-          <div style={{ marginBottom: 4 }}>这是我今晚吃的 分析一下</div>
+          <div style={{ marginBottom: 4 }}>Here's what I had for dinner. Can you analyze it?</div>
           <Img
             src={staticFile("food-soup.png")}
             style={{ borderRadius: 8, maxWidth: 300, maxHeight: 220, objectFit: "cover" }}
@@ -197,7 +197,7 @@ export const FoodAnalysis: React.FC = () => {
           isBot
         >
           <div style={{ marginBottom: 8 }}>
-            看起来这顿饭不仅营养均衡，而且非常清淡健康！
+            This meal looks well-balanced and healthy!
           </div>
           <div
             style={{
@@ -209,12 +209,12 @@ export const FoodAnalysis: React.FC = () => {
             }}
           >
             <div style={{ fontSize: 15, fontWeight: 600, color: "#fff", marginBottom: 12 }}>
-              营养成分估算
+              Nutrition Estimate
             </div>
-            <NutritionItem label="总热量" value="450 - 550 kcal" color="#f59e0b" />
-            <NutritionItem label="蛋白质" value="25-30g" color="#ef4444" />
-            <NutritionItem label="碳水化合物" value="60-70g" color={COLORS.green} />
-            <NutritionItem label="脂肪" value="10-15g" color="#3b82f6" />
+            <NutritionItem label="Calories" value="450 - 550 kcal" color="#f59e0b" />
+            <NutritionItem label="Protein" value="25-30g" color="#ef4444" />
+            <NutritionItem label="Carbs" value="60-70g" color={COLORS.green} />
+            <NutritionItem label="Fat" value="10-15g" color="#3b82f6" />
           </div>
         </Message>
 
@@ -228,8 +228,8 @@ export const FoodAnalysis: React.FC = () => {
           isBot
         >
           <div style={{ color: COLORS.textMuted, fontSize: 14 }}>
-            如果是为了更好的减脂效果，下次可以考虑把白米饭的一半替换成粗粮（如燕麦、糙米）。
-            需要我帮你把这顿饭记录到今天的饮食日志里吗？
+            For better fat loss results, consider replacing half the white rice with whole grains (like oats or brown rice).
+            Would you like me to log this meal to your food diary?
           </div>
         </Message>
 
@@ -241,7 +241,7 @@ export const FoodAnalysis: React.FC = () => {
           time="Yesterday at 7:59 PM"
           delay={310}
         >
-          好的 帮我记录一下
+          Sure, please log it
         </Message>
 
         {/* Bot confirms */}
@@ -253,7 +253,7 @@ export const FoodAnalysis: React.FC = () => {
           delay={370}
           isBot
         >
-          <span style={{ color: COLORS.green }}>已记录！</span> 今日已摄入 500 kcal，剩余 2327 kcal 额度。
+          <span style={{ color: COLORS.green }}>Logged!</span> Today's intake: 500 kcal, 2327 kcal remaining.
         </Message>
       </div>
     </AbsoluteFill>

@@ -128,7 +128,7 @@ export const FormCheck: React.FC = () => {
         {/* User sends gym video */}
         <Message username="Juggernaut" avatarLetter="J" avatarColor="#ed4245"
           time="Yesterday at 8:08 PM" delay={10}>
-          <div style={{ marginBottom: 4 }}>我最近在练弹跳 我教练让我练深蹲高翻为主的训练</div>
+          <div style={{ marginBottom: 4 }}>I've been training for vertical jump. My coach has me doing power cleans and squats</div>
           <div style={{ position: "relative", display: "inline-block" }}>
             <Img src={staticFile("form-gym.png")}
               style={{ borderRadius: 8, maxWidth: 240, maxHeight: 280, objectFit: "cover" }} />
@@ -154,18 +154,18 @@ export const FormCheck: React.FC = () => {
         <Message username="ZJ" avatarLetter="Z" avatarColor="#5865f2"
           time="Yesterday at 8:09 PM" delay={130} isBot>
           <div style={{ marginBottom: 8 }}>
-            想起来了，你身高 179cm，体重 81kg。这身材练弹跳很有潜力啊，尤其是你现在 22 岁，正处于爆发力开发的黄金期。
+            Nice! At 179cm and 81kg, you've got great potential for vertical jump training, especially at 22 years old—prime time for explosive power development.
           </div>
           <div style={{
             backgroundColor: COLORS.embedBg, borderLeft: `4px solid ${COLORS.accent}`,
             borderRadius: 4, padding: 16, marginTop: 8,
           }}>
             <div style={{ fontSize: 15, fontWeight: 600, color: "#fff", marginBottom: 12 }}>
-              动作分析
+              Form Analysis
             </div>
-            <CheckItem text="发力感很好：爆发耸肩和髋部充分伸展" good={true} delay={180} />
-            <CheckItem text="接杠稳健：Front Rack 锁得很死" good={true} delay={195} />
-            <CheckItem text="呼吸与核心：吸气支撑，核心收得比较紧" good={true} delay={210} />
+            <CheckItem text="Excellent power: explosive shrug and full hip extension" good={true} delay={180} />
+            <CheckItem text="Solid catch: front rack position locked in tight" good={true} delay={195} />
+            <CheckItem text="Breathing & core: good breath support, tight core" good={true} delay={210} />
           </div>
         </Message>
 
@@ -173,21 +173,21 @@ export const FormCheck: React.FC = () => {
         <Message username="ZJ" avatarLetter="Z" avatarColor="#5865f2"
           time="Yesterday at 8:09 PM" delay={280} isBot>
           <div style={{ color: COLORS.textMuted, fontSize: 14 }}>
-            针对弹跳训练的建议：负荷安排保持在 1-3 次一组的高强度水平，侧重功率输出（Power Output）而不是耐力。
-            你想记录一下今天的训练数据吗？
+            For vertical jump training: keep loads at 1-3 reps per set for max power output, not endurance.
+            Want to log today's training data?
           </div>
         </Message>
 
         {/* User reply */}
         <Message username="Juggernaut" avatarLetter="J" avatarColor="#ed4245"
           time="Yesterday at 8:10 PM" delay={370}>
-          好的 今天高翻 80kg 3x3 深蹲 120kg 4x4
+          Sure. Power clean 80kg 3x3, squat 120kg 4x4
         </Message>
 
         {/* Bot confirms */}
         <Message username="ZJ" avatarLetter="Z" avatarColor="#5865f2"
           time="Yesterday at 8:10 PM" delay={430} isBot>
-          <span style={{ color: COLORS.green }}>已记录！</span> 今日训练量：高翻 720kg / 深蹲 1920kg，总量 2640kg。
+          <span style={{ color: COLORS.green }}>Logged!</span> Today's volume: Power clean 720kg / Squat 1920kg, total 2640kg.
         </Message>
       </div>
     </AbsoluteFill>
